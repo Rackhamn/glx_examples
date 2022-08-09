@@ -9,3 +9,9 @@ The loop will run for N seconds at N fps. The first triangle will spin according
 
 ![example_1_triangle](/imgs/example_1.png)
 
+### Example 2:
+Almost exactly the same as #1 except that it creates a Quad/Plane model and renders it to screen.
+
+![example_1_triangle](/imgs/example_2.png)
+
+
