@@ -16,12 +16,6 @@
 	#define A2R		(0.01745329252)
 #endif
 
-// make vec3
-struct vertex {
-	float x, y, z;
-	float r, g, b;
-};
-
 typedef struct mat4_s {
 	float data[16];
 } mat4;

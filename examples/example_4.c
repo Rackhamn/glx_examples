@@ -1,7 +1,7 @@
 // 2022-08-09
-// Example 1: OpenGL X11 triangle render inside of FPS loop.
-// gcc -std=c99 -g example_1.c ../common/timing.c ../common/mat4.c -D_GNU_SOURCE -lm -lX11 -lXrandr -lXext -lGL -lGLU -o example; ./example
-#define TITLE "glx example 1"
+// Example 4: OpenGL X11 Cube render inside of FPS loop.
+// gcc -std=c99 -g example_4.c ../common/timing.c ../common/mat4.c -D_GNU_SOURCE -lm -lX11 -lXrandr -lXext -lGL -lGLU -o example; ./example
+#define TITLE	"glx example 4"
 
 #include <stdlib.h>
 #include <string.h>
@@ -32,7 +32,7 @@ in vec3 in_color; \n\
 uniform mat4 u_mvp; \n\
 out vec4 out_color; \n\
 void main() { \n\
-	gl_Position = vec4(in_vertex.xyz, 1) * u_mvp; \n\
+	gl_Position = u_mvp * vec4(in_vertex.xyz, 1); \n\
 	out_color = vec4(in_color, 1); \n\
 } \n\
 ";
@@ -280,16 +280,22 @@ int main(int argc, char ** argv) {
 	
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(struct vertex) * triangle_vertices, triangle_meshdata, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(struct vertex) * cube_vertices, cube_meshdata, GL_STATIC_DRAW);
 	
-	// dependant on struct vertex
 	glEnableVertexAttribArray(pos_loc);
 	glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, 24, (void*)0);
+	
 	glEnableVertexAttribArray(col_loc);
 	glVertexAttribPointer(col_loc, 3, GL_FLOAT, GL_FALSE, 24, (void*)(12));
 
 	glEnable(GL_DEPTH_TEST);
   	glDepthFunc(GL_LESS);
+  	
+  	
+  	glFrontFace(GL_CCW);
+  	glEnable(GL_CULL_FACE);
+  	glCullFace(GL_BACK);
+  	
   	
 	// calculate runtime
 	fov = 60;
@@ -308,16 +314,16 @@ int main(int argc, char ** argv) {
 	mat4_identity(&m4_camera);
 	m4_camera.data[12] = 0;
 	m4_camera.data[13] = 0;
-	m4_camera.data[14] = -1;
+	m4_camera.data[14] = -10;
 	
 	// set up the translation data for the model (triangle)
 	models[0].id = 0;
 	models[0].x = 0;
 	models[0].y = 0;
 	models[0].z = -5;
-	models[0].sx = 1;
-	models[0].sy = 1;
-	models[0].sz = 1;
+	models[0].sx = 2;
+	models[0].sy = 2;
+	models[0].sz = 2;
 	models[0].rx = 0;
 	models[0].ry = 0;
 	models[0].rz = 0;
@@ -389,9 +395,13 @@ int main(int argc, char ** argv) {
 		
 		// realtime model rotation:
 		float rad = time * A2R * 6.28 * 10;
+		rad = 0;
 		models[0].rx = rad;
 		models[0].ry = rad;
 		models[0].rz = rad;
+		
+		models[0].rx = time * A2R * fps * .1;
+		models[0].ry = time * A2R * fps;
 		
 		int i = 0;
 		while(i < mcount) {			
@@ -424,16 +434,16 @@ int main(int argc, char ** argv) {
 			mat4_mul(&umat, &m4_proj);
 			
 			// transpose the row major (C) matrix into column major ordering (Opengl).
-			mat4_transpose(&umat); 
+			// mat4_transpose(&umat); 
 			glUniformMatrix4fv(uniform_mvp_loc, 1, GL_FALSE, (GLfloat *)umat.data);
-			glDrawArrays(GL_TRIANGLES, 0, triangle_vertices);
+			glDrawArrays(GL_TRIANGLES, 0, cube_vertices);
 			
 			i++;
 		}
 		
-		glUseProgram(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
+		glUseProgram(0);
 		
 		glXSwapBuffers(display, win);
 		glFlush();
