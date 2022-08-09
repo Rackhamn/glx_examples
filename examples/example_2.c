@@ -1,7 +1,7 @@
 // 2022-08-09
-// Example 1: OpenGL X11 triangle render inside of FPS loop.
-// gcc -std=c99 -g example_1.c common/timing.c common/mat4.c -D_GNU_SOURCE -lm -lX11 -lXrandr -lXext -lGL -lGLU -o example; ./example
-#define TITLE "glx example 1"
+// Example 2: OpenGL X11 quad render inside of FPS loop.
+// gcc -std=c99 -g example_2.c common/timing.c common/mat4.c -D_GNU_SOURCE -lm -lX11 -lXrandr -lXext -lGL -lGLU -o example; ./example
+#define TITLE	"glx example 2"
 
 #include <stdlib.h>
 #include <string.h>
@@ -13,8 +13,8 @@
 #include <GL/gl.h>
 #include <GL/glext.h>
 
-#include "common/timing.h"
-#include "common/mat4.h"
+#include "../common/timing.h"
+#include "../common/mat4.h"
 
 typedef struct model_s {
 	int id;
@@ -23,11 +23,14 @@ typedef struct model_s {
 	float sx, sy, sz; // scale
 } model;
 
-const struct vertex triangle_vertices[3] = {
+const struct vertex quad_vertices[6] = {
 //   X		Y	   Z	 R	 G	 B		(FLOAT)
-	{-1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f }, // Vertex 1
-	{ 0.0f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f }, // Vertex 2
-	{ 1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f }  // Vertex 3
+	{  1.0, -1.0, 0.0, 1.0, 0.0, 0.0 }, // top right
+	{ -1.0, -1.0, 0.0, 0.0, 1.0, 0.0 }, // top left
+	{ -1.0,  1.0, 0.0, 0.0, 0.0, 1.0 }, // bot left
+	{  1.0, -1.0, 0.0, 1.0, 0.0, 0.0 }, // top right 2
+	{ -1.0,  1.0, 0.0, 0.0, 0.0, 1.0 }, // bot left 2
+	{  1.0,  1.0, 0.0, 0.0, 1.0, 0.0 }, // bot right
 };
 
 const char * vertex_shader_src = "\
@@ -285,7 +288,7 @@ int main(int argc, char ** argv) {
 	
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(struct vertex) * 3, triangle_vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(struct vertex) * 6, quad_vertices, GL_STATIC_DRAW);
 	
 	glEnableVertexAttribArray(pos_loc);
 	glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, 24, (void*)0);
@@ -431,7 +434,7 @@ int main(int argc, char ** argv) {
 			// transpose the row major (C) matrix into column major ordering (Opengl).
 			mat4_transpose(&umat); 
 			glUniformMatrix4fv(uniform_mvp_loc, 1, GL_FALSE, (GLfloat *)umat.data);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
 			
 			i++;
 		}
