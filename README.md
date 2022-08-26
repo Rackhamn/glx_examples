@@ -2,7 +2,7 @@
 My attempt at saving OpenGL, GLX &amp; X11 examples so that i dont have to google when i forget something in the API.
 
 
-## Example 1..4:
+## Example 1..5:
 Creates a realtime loop and an interactive X11 window.  
 It initializes OpenGL and allows N triangles to be renderered to the screen.  
 The loop will run for N seconds at N fps. 
@@ -19,3 +19,6 @@ The models will spin according to time.
 
 ### Example 4: Cube.  
 ![example_4_cube](/imgs/example_4.png)
+
+### Example 5: multiple different .obj  
+![example_5_mobj](/imgs/example_5.png)
