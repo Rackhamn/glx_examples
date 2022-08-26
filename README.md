@@ -21,4 +21,5 @@ The models will spin according to time.
 ![example_4_cube](/imgs/example_4.png)
 
 ### Example 5: multiple different .obj  
-![example_5_mobj](/imgs/example_5.png)
+![example_5_mobj](/imgs/example_5.png)  
+Example 5 added mesh loading for simple .obj files as well as handling of multiple meshes, models and (not yet complete) better math.
