@@ -90,12 +90,6 @@ int mm_load_mesh(struct model_manager * mm, char * path) {
 	return id;
 };
 
-// 25 USD to push the plugin
-// use Manifest V3 (Json) - JS 
-// https://developer.chrome.com/docs/webstore/?hl=sv
-// https://developer.chrome.com/docs/extensions/reference/scripting/
-// write a browser plugin that swaps 'shorts/' to 'watch?v=' in youtube urls.
-
 void mm_write_meshes_to_opengl(struct model_manager * mm) {
 	int vcount;
 	struct vertex * vbuf;
